@@ -1,11 +1,13 @@
 .PHONY: build clean test package serve update-vendor api statics
 PKGS := $(shell go list ./... | grep -v /vendor/ | grep -v loraserver/api | grep -v /migrations | grep -v /static)
 VERSION := $(shell git describe --always |sed -e "s/^v//")
+VERSION = $(shell date +%Y%m%d%H%M%S)
 
 build: statics
 	@echo "Compiling source"
 	@mkdir -p build
 	go build $(GO_EXTRA_BUILD_ARGS) -ldflags "-s -w -X main.version=$(VERSION)" -o build/loraserver cmd/loraserver/main.go
+	docker build  . -f d   -t jackie/loraserver
 
 clean:
 	@echo "Cleaning up workspace"

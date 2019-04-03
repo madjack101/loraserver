@@ -3,6 +3,9 @@ package main
 import (
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/grpclog"
+	_ "net/http/pprof"	
+	"net/http"	
+	logr "log"	
 
 	"github.com/brocaar/loraserver/cmd/loraserver/cmd"
 )
@@ -55,5 +58,8 @@ func init() {
 var version string // set by the compiler
 
 func main() {
+	go func() {
+		logr.Println(http.ListenAndServe("0.0.0.0:9099", nil))
+	}()
 	cmd.Execute(version)
 }
